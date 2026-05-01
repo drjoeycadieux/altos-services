@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Request App</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Ride Request App</h1>
+        </header>
+
+        <div class="main-content">
+            <!-- Map Section -->
+            <div class="map-section">
+                <div id="map"></div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-section">
+                <h2>Request a Ride</h2>
+                <form id="rideForm">
+                    <div class="form-group">
+                        <label for="pickupLocation">Pickup Location</label>
+                        <input type="text" id="pickupLocation" placeholder="Enter pickup address or click on map" required>
+                        <input type="hidden" id="pickupLat">
+                        <input type="hidden" id="pickupLng">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dropoffLocation">Dropoff Location</label>
+                        <input type="text" id="dropoffLocation" placeholder="Enter dropoff address or click on map" required>
+                        <input type="hidden" id="dropoffLat">
+                        <input type="hidden" id="dropoffLng">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passengerName">Your Name</label>
+                        <input type="text" id="passengerName" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passengerPhone">Phone Number</label>
+                        <input type="tel" id="passengerPhone" placeholder="Enter phone number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rideType">Ride Type</label>
+                        <select id="rideType">
+                            <option value="standard">Standard</option>
+                            <option value="premium">Premium</option>
+                            <option value="xl">XL</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" id="submitBtn">Request Ride</button>
+                </form>
+
+                <div class="instructions">
+                    <h3>Instructions:</h3>
+                    <ol>
+                        <li>Click on the map to set pickup location</li>
+                        <li>Click again to set dropoff location</li>
+                        <li>Fill in your details</li>
+                        <li>Submit your ride request</li>
+                    </ol>
+                </div>
+
+                <div id="statusMessage" class="status-message"></div>
+            </div>
+        </div>
+
+        <!-- Active Rides Section -->
+        <div class="active-rides-section">
+            <h2>Active Ride Requests</h2>
+            <div id="ridesList" class="rides-list"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- App JS -->
+    <script src="app.js"></script>
+</body>
+</html>
