@@ -1,0 +1,87 @@
+```gitignore
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+.env
+.env.local
+.env.*
+
+# Build directories
+dist/
+build/
+target/
+*.min.js
+*.min.css
+bundle.js
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.backup
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+.directory
+*.nib
+*~
+.DS_Store?
+._*
+
+# Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+*.pyc
+*.pyo
+*.pyd
+.Python
+.coverage
+coverage/
+htmlcov/
+
+# Compression files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```
