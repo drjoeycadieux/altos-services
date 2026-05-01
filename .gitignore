@@ -23,65 +23,39 @@ venv/
 dist/
 build/
 target/
-*.min.js
-*.min.css
-bundle.js
+*.jar
+*.war
+*.zip
+*.tar.gz
 
-# Logs and temporary files
+# Logs and temp files
 *.log
 *.tmp
 *.swp
 *.swo
-*.bak
-*.backup
 
-# OS generated files
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-.directory
-*.nib
-*~
-.DS_Store?
-._*
-
-# Editor specific
+# Editors and IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
-.project
-*.pyc
-*.pyo
-*.pyd
-.Python
-.coverage
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage and testing
 coverage/
 htmlcov/
+.coverage
+*.coverage
 
-# Compression files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# Gradle
+.gradle/
+
+# MyPy
+.mypy_cache/
+
+# PyTest
+.pytest_cache/
 ```
