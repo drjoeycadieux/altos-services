@@ -137,9 +137,29 @@ function clearMarkers() {
 }
 
 // ============================================
-// FORM HANDLING
+// FORM HANDLING & FARE CALCULATION
 // ============================================
 const rideForm = document.getElementById('rideForm');
+const SERVICE_FEE = 2.50;
+
+// Initialize fare calculation on load
+updateFareDisplay();
+
+// Add event listeners for ride type changes
+document.querySelectorAll('input[name="rideType"]').forEach(radio => {
+    radio.addEventListener('change', updateFareDisplay);
+});
+
+// Update fare display based on selected ride type
+function updateFareDisplay() {
+    const selectedRide = document.querySelector('input[name="rideType"]:checked');
+    const baseFare = parseFloat(selectedRide.dataset.price) || 15;
+    const totalFare = baseFare + SERVICE_FEE;
+    
+    document.getElementById('baseFare').textContent = `$${baseFare.toFixed(2)}`;
+    document.getElementById('serviceFee').textContent = `$${SERVICE_FEE.toFixed(2)}`;
+    document.getElementById('totalFare').textContent = `$${totalFare.toFixed(2)}`;
+}
 
 rideForm.addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -151,7 +171,11 @@ rideForm.addEventListener('submit', async function(e) {
     const dropoffLng = document.getElementById('dropoffLng').value;
     const passengerName = document.getElementById('passengerName').value;
     const passengerPhone = document.getElementById('passengerPhone').value;
-    const rideType = document.getElementById('rideType').value;
+    const rideType = document.querySelector('input[name="rideType"]:checked').value;
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const selectedRide = document.querySelector('input[name="rideType"]:checked');
+    const baseFare = parseFloat(selectedRide.dataset.price) || 15;
+    const totalFare = baseFare + SERVICE_FEE;
 
     // Validate locations
     if (!pickupLat || !pickupLng || !dropoffLat || !dropoffLng) {
@@ -162,10 +186,10 @@ rideForm.addEventListener('submit', async function(e) {
     // Disable submit button
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
     try {
-        // Create ride request object
+        // Create ride request object with payment info
         const rideRequest = {
             pickup: {
                 lat: parseFloat(pickupLat),
@@ -182,6 +206,13 @@ rideForm.addEventListener('submit', async function(e) {
                 phone: passengerPhone
             },
             rideType: rideType,
+            payment: {
+                method: paymentMethod,
+                baseFare: baseFare,
+                serviceFee: SERVICE_FEE,
+                totalFare: totalFare,
+                status: paymentMethod === 'Cash' ? 'pending' : 'authorized'
+            },
             status: 'pending',
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             createdAt: new Date().toISOString()
@@ -191,22 +222,23 @@ rideForm.addEventListener('submit', async function(e) {
         const newRideRef = database.ref('rides').push();
         await newRideRef.set(rideRequest);
 
-        showStatus('Ride request submitted successfully!', 'success');
+        showStatus('Ride request submitted successfully! Driver will be assigned soon.', 'success');
         
         // Clear form
         rideForm.reset();
         clearMarkers();
+        updateFareDisplay();
 
         // Re-enable submit button
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Request Ride';
+        submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm & Request Ride';
 
     } catch (error) {
         console.error('Error submitting ride:', error);
         showStatus('Failed to submit ride request. Please try again.', 'error');
         
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Request Ride';
+        submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm & Request Ride';
     }
 });
 
@@ -238,7 +270,7 @@ function listenForRides() {
         const rides = snapshot.val();
 
         if (!rides) {
-            ridesList.innerHTML = '<div class="no-rides">No active ride requests</div>';
+            ridesList.innerHTML = '<div class="no-rides-message"><i class="fas fa-car-crash"></i><p>No active ride requests yet</p></div>';
             return;
         }
 
@@ -252,7 +284,7 @@ function listenForRides() {
         const recentRides = ridesArray.filter(ride => (ride.timestamp || 0) > oneDayAgo);
 
         if (recentRides.length === 0) {
-            ridesList.innerHTML = '<div class="no-rides">No recent ride requests</div>';
+            ridesList.innerHTML = '<div class="no-rides-message"><i class="fas fa-moon"></i><p>No recent ride requests</p></div>';
             return;
         }
 
@@ -270,34 +302,78 @@ function listenForRides() {
 // Create a ride card element
 function createRideCard(ride) {
     const card = document.createElement('div');
-    card.className = `ride-card ${ride.rideType}`;
+    card.className = 'ride-item';
     card.dataset.rideId = ride.id;
 
     const statusClass = ride.status || 'pending';
     const rideTypeLabel = ride.rideType.charAt(0).toUpperCase() + ride.rideType.slice(1);
+    const paymentIcon = getPaymentIcon(ride.payment?.method || 'Credit Card');
+    const totalFare = ride.payment?.totalFare || 0;
 
     card.innerHTML = `
-        <div class="ride-header">
-            <span class="ride-type-badge ${ride.rideType}">${rideTypeLabel}</span>
-            <span class="ride-status ${statusClass}">${statusClass.toUpperCase()}</span>
+        <div class="ride-item-header">
+            <span class="ride-id-badge">#${ride.id.substring(0, 8)}</span>
+            <span class="ride-status-badge ${statusClass}">${statusClass.toUpperCase()}</span>
         </div>
-        <div class="ride-info">
-            <div class="ride-info-label">📍 Pickup</div>
-            <div class="ride-info-value">${ride.pickup.address}</div>
-        </div>
-        <div class="ride-info">
-            <div class="ride-info-label">🏁 Dropoff</div>
-            <div class="ride-info-value">${ride.dropoff.address}</div>
-        </div>
-        <div class="ride-passenger">
-            <div class="ride-info-label">👤 Passenger</div>
-            <div class="ride-info-value">${ride.passenger.name}</div>
-            <div class="ride-info-label">📞 Phone</div>
-            <div class="ride-info-value">${ride.passenger.phone}</div>
+        <div class="ride-info-grid">
+            <div class="ride-info-item">
+                <i class="fas fa-map-marker-alt ride-info-icon" style="color: #10b981;"></i>
+                <div>
+                    <div class="ride-info-label">Pickup</div>
+                    <div class="ride-info-value">${ride.pickup.address}</div>
+                </div>
+            </div>
+            <div class="ride-info-item">
+                <i class="fas fa-map-marker-alt ride-info-icon" style="color: #ef4444;"></i>
+                <div>
+                    <div class="ride-info-label">Dropoff</div>
+                    <div class="ride-info-value">${ride.dropoff.address}</div>
+                </div>
+            </div>
+            <div class="ride-info-item">
+                <i class="fas fa-user ride-info-icon"></i>
+                <div>
+                    <div class="ride-info-label">Passenger</div>
+                    <div class="ride-info-value">${ride.passenger.name}</div>
+                    <div class="ride-info-label">Phone</div>
+                    <div class="ride-info-value">${ride.passenger.phone}</div>
+                </div>
+            </div>
+            <div class="ride-info-item">
+                <i class="fas fa-car ride-info-icon"></i>
+                <div>
+                    <div class="ride-info-label">Ride Type</div>
+                    <div class="ride-info-value">${rideTypeLabel}</div>
+                </div>
+            </div>
+            <div class="ride-info-item">
+                ${paymentIcon}
+                <div>
+                    <div class="ride-info-label">Payment</div>
+                    <div class="ride-info-value">${ride.payment?.method || 'Credit Card'}</div>
+                </div>
+            </div>
+            <div class="ride-info-item">
+                <i class="fas fa-dollar-sign ride-info-icon" style="color: #10b981;"></i>
+                <div>
+                    <div class="ride-info-label">Total Fare</div>
+                    <div class="ride-info-value" style="color: #10b981; font-weight: 600;">$${totalFare.toFixed(2)}</div>
+                </div>
+            </div>
         </div>
     `;
 
     return card;
+}
+
+// Get payment icon based on method
+function getPaymentIcon(method) {
+    const icons = {
+        'Credit Card': '<i class="fas fa-credit-card ride-info-icon" style="color: #3b82f6;"></i>',
+        'Cash': '<i class="fas fa-money-bill-wave ride-info-icon" style="color: #10b981;"></i>',
+        'Wallet': '<i class="fas fa-wallet ride-info-icon" style="color: #8b5cf6;"></i>'
+    };
+    return icons[method] || icons['Credit Card'];
 }
 
 // Update ride markers on the map

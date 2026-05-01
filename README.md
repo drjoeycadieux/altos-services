@@ -1,50 +1,53 @@
 # Ride Request App with Leaflet Maps & Firebase
 
-A web application that allows users to request rides using an interactive map interface. Built with HTML, CSS, JavaScript, Leaflet.js for maps, and Firebase Realtime Database for data storage.
+A professional ride-hailing web application with payment integration, built using HTML, CSS, JavaScript, Leaflet.js for maps, and Firebase Realtime Database for data storage.
 
-## Features
+## ✨ Features
 
-- 🗺️ **Interactive Map**: Click on the map to select pickup and dropoff locations
-- 📍 **Visual Markers**: Green marker for pickup, red marker for dropoff
-- 🚗 **Ride Types**: Choose between Standard, Premium, or XL rides
-- 📱 **Real-time Updates**: See all active ride requests update in real-time
-- 🎨 **Modern UI**: Clean, responsive design with gradient styling
+- 🗺️ **Interactive Map**: Click to select pickup and dropoff locations with visual markers
+- 💳 **Payment Options**: Choose between Credit Card, Cash, or Digital Wallet
+- 💰 **Fare Estimation**: Real-time fare calculation based on ride type
+- 🚗 **Ride Types**: Select from Standard, Premium, or XL rides
+- 📍 **Visual Markers**: Green marker for pickup, red for dropoff, colored markers for active rides
+- 📱 **Real-time Updates**: All ride requests update instantly via Firebase
+- 🎨 **Professional Dark Theme**: Modern UI with gradient accents and smooth animations
+- 📊 **Detailed Ride Cards**: View complete ride info including payment method and total fare
 
-## Files Structure
+## 📁 Files Structure
 
 ```
 /workspace
-├── index.html      # Main HTML structure
-├── styles.css      # Styling and layout
-├── app.js          # Application logic (Firebase + Leaflet)
-└── README.md       # This file
+├── index.html      # Main HTML structure with form and map
+├── styles.css      # Professional dark theme styling
+├── app.js          # Application logic (Firebase + Leaflet + Fare calculation)
+└── README.md       # Documentation
 ```
 
-## Setup Instructions
+## 🚀 Setup Instructions
 
 ### 1. Create a Firebase Project
 
-1. Go to [Firebase Console](https://console.firebase.google.com/)
+1. Visit [Firebase Console](https://console.firebase.google.com/)
 2. Click "Add project" and follow the setup wizard
-3. Once created, go to Project Settings (gear icon)
+3. Once created, access Project Settings (gear icon ⚙️)
 
 ### 2. Enable Realtime Database
 
-1. In Firebase Console, navigate to **Build** → **Realtime Database**
+1. Navigate to **Build** → **Realtime Database**
 2. Click **Create Database**
-3. Choose your location
-4. Set security rules to **Test Mode** for development (or configure proper rules for production)
+3. Select your preferred location
+4. Set security rules to **Test Mode** for development
 
 ### 3. Get Your Firebase Configuration
 
-1. In Project Settings, scroll down to "Your apps"
-2. Click the web icon (</>) to add a web app
-3. Register your app with a nickname
-4. Copy the `firebaseConfig` object provided
+1. In Project Settings, scroll to "Your apps"
+2. Click the web icon (`</>`) to register a web app
+3. Give your app a nickname
+4. Copy the provided `firebaseConfig` object
 
 ### 4. Update Configuration in app.js
 
-Open `app.js` and replace the placeholder configuration with your actual Firebase config:
+Open `app.js` and replace the placeholder configuration:
 
 ```javascript
 const firebaseConfig = {
@@ -60,43 +63,53 @@ const firebaseConfig = {
 
 ### 5. Run the Application
 
-You can run this application using any local web server:
-
 **Option 1: Using Python**
 ```bash
 cd /workspace
 python3 -m http.server 8000
 ```
 
-**Option 2: Using Node.js (http-server)**
+**Option 2: Using Node.js**
 ```bash
 npm install -g http-server
 cd /workspace
 http-server -p 8000
 ```
 
-**Option 3: Using VS Code Live Server**
-- Install the "Live Server" extension
-- Right-click on `index.html` and select "Open with Live Server"
+**Option 3: VS Code Live Server**
+- Install "Live Server" extension
+- Right-click `index.html` → "Open with Live Server"
 
-Then open your browser and navigate to `http://localhost:8000`
+Then open `http://localhost:8000` in your browser.
 
-## How to Use
+## 📖 How to Use
 
-1. **Select Pickup Location**: Click on the map where you want to be picked up
-2. **Select Dropoff Location**: Click again on the map for your destination
-3. **Fill in Details**: Enter your name and phone number
-4. **Choose Ride Type**: Select Standard, Premium, or XL
-5. **Submit Request**: Click "Request Ride" button
+1. **Select Pickup**: Click on the map to set your pickup location
+2. **Select Dropoff**: Click again to set your destination
+3. **Enter Details**: Provide your name and phone number
+4. **Choose Ride Type**: Pick Standard ($15-20), Premium ($25-35), or XL ($35-45)
+5. **Select Payment**: Choose Credit Card, Cash, or Digital Wallet
+6. **Review Fare**: See the estimated total fare (base fare + $2.50 service fee)
+7. **Submit Request**: Click "Confirm & Request Ride"
 
 Your ride request will be:
-- Saved to Firebase Realtime Database
-- Displayed as a marker on the map
-- Listed in the "Active Ride Requests" section below
+- ✅ Saved to Firebase with payment information
+- 🗺️ Displayed as a marker on the map
+- 📋 Listed in the "Active Ride Requests" section with full details
 
-## Firebase Security Rules
+## 💳 Payment Methods
 
-For production, update your Firebase Realtime Database security rules:
+The app supports three payment options:
+
+| Method | Icon | Payment Status |
+|--------|------|----------------|
+| Credit/Debit Card | 💳 | Authorized |
+| Cash | 💵 | Pending (pay driver) |
+| Digital Wallet | 👛 | Authorized |
+
+## 🔒 Firebase Security Rules
+
+For production deployment, configure proper security rules:
 
 ```json
 {
@@ -109,56 +122,103 @@ For production, update your Firebase Realtime Database security rules:
 }
 ```
 
-**Note**: For production applications, implement proper authentication and more restrictive security rules.
+> ⚠️ **Note**: Implement Firebase Authentication and stricter rules for production apps.
 
-## Customization
+## 🎨 Customization
 
 ### Change Default Map Location
 
-In `app.js`, modify the `initMap()` function:
+In `app.js`, modify `initMap()`:
 
 ```javascript
-map = L.map('map').setView([YOUR_LATITUDE, YOUR_LONGITUDE], 13);
+map = L.map('map').setView([YOUR_LAT, YOUR_LNG], 13);
+```
+
+### Adjust Pricing
+
+In `index.html`, update `data-price` attributes:
+
+```html
+<input type="radio" name="rideType" value="Standard" data-price="15" checked>
+```
+
+In `app.js`, adjust the service fee:
+
+```javascript
+const SERVICE_FEE = 2.50; // Change this value
 ```
 
 ### Add More Ride Types
 
-In `index.html`, add more options to the ride type select:
-
+1. Add option in `index.html`:
 ```html
-<option value="luxury">Luxury</option>
+<label class="ride-option">
+    <input type="radio" name="rideType" value="Luxury" data-price="50">
+    <div class="option-card">
+        <i class="fas fa-gem"></i>
+        <span class="option-name">Luxury</span>
+        <span class="option-price">$50-70</span>
+    </div>
+</label>
 ```
 
-Then update the color mapping in `app.js`:
-
+2. Update color mapping in `app.js`:
 ```javascript
 function getRideColor(rideType) {
     const colors = {
-        standard: '#667eea',
-        premium: '#764ba2',
-        xl: '#f093fb',
-        luxury: '#ffd700'  // Add new color
+        standard: '#10b981',
+        premium: '#3b82f6',
+        xl: '#8b5cf6',
+        luxury: '#fbbf24'
     };
-    return colors[rideType] || '#667eea';
+    return colors[rideType] || '#3b82f6';
 }
 ```
 
-## Technologies Used
+## 🛠 Technologies Used
 
-- **Leaflet.js**: Open-source JavaScript library for interactive maps
-- **Firebase Realtime Database**: Cloud-hosted NoSQL database
-- **OpenStreetMap**: Free, editable map of the world
-- **HTML5/CSS3**: Modern web standards
-- **Vanilla JavaScript**: No frameworks required
+- **Leaflet.js** - Interactive map library
+- **Firebase Realtime Database** - Cloud NoSQL database
+- **OpenStreetMap** - Free world map tiles
+- **Font Awesome** - Icon library
+- **HTML5/CSS3** - Modern web standards
+- **Vanilla JavaScript** - No frameworks needed
 
-## Browser Support
+## 🌐 Browser Support
 
-Works on all modern browsers:
-- Chrome
-- Firefox
-- Safari
-- Edge
+Compatible with all modern browsers:
+- ✅ Chrome
+- ✅ Firefox
+- ✅ Safari
+- ✅ Edge
 
-## License
+## 📝 Data Structure
 
-MIT License - Feel free to use and modify for your projects!
+Each ride request stored in Firebase:
+
+```javascript
+{
+  pickup: { lat: 40.7128, lng: -74.0060, address: "40.7128, -74.0060" },
+  dropoff: { lat: 40.7580, lng: -73.9855, address: "40.7580, -73.9855" },
+  passenger: { name: "John Doe", phone: "+1 234 567 8900" },
+  rideType: "Premium",
+  payment: {
+    method: "Credit Card",
+    baseFare: 25,
+    serviceFee: 2.50,
+    totalFare: 27.50,
+    status: "authorized"
+  },
+  status: "pending",
+  timestamp: 1234567890,
+  createdAt: "2024-01-15T10:30:00.000Z"
+}
+```
+
+## 📄 License
+
+MIT License - Free to use and modify for your projects!
+
+---
+
+**Need help?** Check the [Firebase Documentation](https://firebase.google.com/docs) or [Leaflet Documentation](https://leafletjs.com/reference.html).

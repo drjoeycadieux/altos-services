@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ride Request App</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -21,51 +22,119 @@
 
             <!-- Form Section -->
             <div class="form-section">
-                <h2>Request a Ride</h2>
+                <h2><i class="fas fa-taxi"></i> Request a Ride</h2>
                 <form id="rideForm">
                     <div class="form-group">
-                        <label for="pickupLocation">Pickup Location</label>
-                        <input type="text" id="pickupLocation" placeholder="Enter pickup address or click on map" required>
+                        <label for="pickupLocation"><i class="fas fa-map-marker-alt" style="color: #10b981;"></i> Pickup Location</label>
+                        <input type="text" id="pickupLocation" placeholder="Click on map to select pickup" readonly required>
                         <input type="hidden" id="pickupLat">
                         <input type="hidden" id="pickupLng">
                     </div>
 
                     <div class="form-group">
-                        <label for="dropoffLocation">Dropoff Location</label>
-                        <input type="text" id="dropoffLocation" placeholder="Enter dropoff address or click on map" required>
+                        <label for="dropoffLocation"><i class="fas fa-map-marker-alt" style="color: #ef4444;"></i> Dropoff Location</label>
+                        <input type="text" id="dropoffLocation" placeholder="Click on map to select dropoff" readonly required>
                         <input type="hidden" id="dropoffLat">
                         <input type="hidden" id="dropoffLng">
                     </div>
 
-                    <div class="form-group">
-                        <label for="passengerName">Your Name</label>
-                        <input type="text" id="passengerName" placeholder="Enter your name" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="passengerName"><i class="fas fa-user"></i> Your Name</label>
+                            <input type="text" id="passengerName" placeholder="John Doe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passengerPhone"><i class="fas fa-phone"></i> Phone</label>
+                            <input type="tel" id="passengerPhone" placeholder="+1 234 567 8900" required>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="passengerPhone">Phone Number</label>
-                        <input type="tel" id="passengerPhone" placeholder="Enter phone number" required>
+                        <label><i class="fas fa-car"></i> Select Ride Type</label>
+                        <div class="ride-options">
+                            <label class="ride-option">
+                                <input type="radio" name="rideType" value="Standard" data-price="15" checked>
+                                <div class="option-card">
+                                    <i class="fas fa-car"></i>
+                                    <span class="option-name">Standard</span>
+                                    <span class="option-price">$15-20</span>
+                                </div>
+                            </label>
+                            <label class="ride-option">
+                                <input type="radio" name="rideType" value="Premium" data-price="25">
+                                <div class="option-card">
+                                    <i class="fas fa-car-side"></i>
+                                    <span class="option-name">Premium</span>
+                                    <span class="option-price">$25-35</span>
+                                </div>
+                            </label>
+                            <label class="ride-option">
+                                <input type="radio" name="rideType" value="XL" data-price="35">
+                                <div class="option-card">
+                                    <i class="fas fa-shuttle-van"></i>
+                                    <span class="option-name">XL</span>
+                                    <span class="option-price">$35-45</span>
+                                </div>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="rideType">Ride Type</label>
-                        <select id="rideType">
-                            <option value="standard">Standard</option>
-                            <option value="premium">Premium</option>
-                            <option value="xl">XL</option>
-                        </select>
+                        <label><i class="fas fa-credit-card"></i> Payment Method</label>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="Credit Card" checked>
+                                <div class="payment-card">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Credit/Debit Card</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="Cash">
+                                <div class="payment-card">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Cash</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="Wallet">
+                                <div class="payment-card">
+                                    <i class="fas fa-wallet"></i>
+                                    <span>Digital Wallet</span>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="fare-estimate">
+                            <div class="fare-row">
+                                <span>Base Fare:</span>
+                                <span id="baseFare">$15.00</span>
+                            </div>
+                            <div class="fare-row">
+                                <span>Service Fee:</span>
+                                <span id="serviceFee">$2.50</span>
+                            </div>
+                            <div class="fare-row total">
+                                <span>Total Estimated Fare:</span>
+                                <strong id="totalFare">$17.50</strong>
+                            </div>
+                        </div>
                     </div>
 
-                    <button type="submit" id="submitBtn">Request Ride</button>
+                    <button type="submit" id="submitBtn">
+                        <i class="fas fa-check-circle"></i> Confirm & Request Ride
+                    </button>
                 </form>
 
                 <div class="instructions">
-                    <h3>Instructions:</h3>
+                    <h3><i class="fas fa-info-circle"></i> How it works:</h3>
                     <ol>
-                        <li>Click on the map to set pickup location</li>
-                        <li>Click again to set dropoff location</li>
-                        <li>Fill in your details</li>
-                        <li>Submit your ride request</li>
+                        <li><i class="fas fa-map-pin"></i> Click on the map to set your <strong>pickup location</strong></li>
+                        <li><i class="fas fa-map-pin"></i> Click again to set your <strong>dropoff location</strong></li>
+                        <li><i class="fas fa-car"></i> Choose your preferred <strong>ride type</strong></li>
+                        <li><i class="fas fa-credit-card"></i> Select your <strong>payment method</strong></li>
+                        <li><i class="fas fa-paper-plane"></i> Submit your ride request</li>
                     </ol>
                 </div>
 
