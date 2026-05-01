@@ -1,74 +1,93 @@
 ```gitignore
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-*.o
-*.obj
-*.class
-*.exe
-*.dll
-*.so
-*.a
-*.out
-
-# Dependencies
-node_modules/
-venv/
-.venv/
-.env
-.env.local
-.env.*
-
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-*.swo
+
+# Environment
+.env
+.env.local
+*.env.*
 
 # Editors
 .vscode/
 .idea/
 
-# System files
-.DS_Store
-Thumbs.db
-
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Build directories
-dist/
-build/
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.julia/
+zig*/
 target/
 .gradle/
 
-# Python specific
-.mypy_cache/
-.pytest_cache/
+# Compiled and build artifacts
+*.pyc
+*.class
+*.o
+*.exe
+*.dll
+*.so
+*.a
+*.obj
+*.out
+dist/
+build/
+coverage/
+htmlcov/
+*.log
+*.tmp
 
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# System files
+.DS_Store
+Thumbs.db
+```
+
+Wait, let me reconsider. The modified files are only `app.js` and `styles.css`, which are source files. There are no build artifacts, dependencies, or temporary files in the change list that would require additional ignores beyond what might already be reasonable to preserve.
+
+Actually, since only source files (`app.js`, `styles.css`) were modified and there's no indication of build artifacts or dependencies being part of the changes, I should check if the existing rules need to be preserved based on common web development patterns, but since we don't have a specific current .gitignore with context, and the changes are only source files, this may not be appropriate.
+
+Let me reconsider: if the current .gitignore had `*.log` and we're working on a web project where that's still relevant, we should preserve it. But without seeing the current content, I can't determine what to preserve specifically.
+
+Actually, re-reading the instructions more carefully, I see that I need to consider the current .gitignore content, but it wasn't provided in the format expected. Let me output based on the fact that only source files were modified:
+
+```gitignore
+# Logs and temp files
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+
+# System files
+.DS_Store
+Thumbs.db
+```
+
+Wait, I need to be more careful. The instruction says to output nothing if only source/config files are changed and no build artifacts are present. The example shows that when only source files like `.py`, `.js`, `.java`, etc. are present with no build artifacts, the output should be empty.
+
+Since only `app.js` and `styles.css` (both source files) were modified, and there are no build artifacts, dependencies, or temp files in the change list, the output should be empty.
+
+But wait, I should check if there are any existing rules in the "current .gitignore Content" section. Looking again at the input, it says "###current .gitignore Content" but doesn't show the actual content after that line. So the current .gitignore appears to be empty.
+
+Since only source files were modified and the current .gitignore is empty, and there are no build artifacts in the changes, I should output nothing.
+
+Actually, re-reading the prompt more carefully: the changes might include files that should be added to .gitignore even if they weren't explicitly listed as added/deleted/modified. But looking at the specific case, only `app.js` and `styles.css` were modified, and these are source files that shouldn't be ignored.
+
+However, I think I may have misread. Let me reread: "if the change list contains ONLY source or config files... and NO build artifacts, dependencies, or temp files — output an EMPTY .gitignore". Since only `app.js` (JS source) and `styles.css` (CSS source) were modified, these are both source files, so according to rule #6, I should output nothing.
+
+```gitignore
+
 ```
